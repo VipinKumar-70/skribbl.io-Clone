@@ -4,7 +4,7 @@ const roomSchema = new mongoose.Schema({
     roomCode: {
         type: String,
         required: true,
-        unique: true // E.g. 'ABCD' to share with friends
+        unique: true
     },
     players: [
         {
@@ -17,11 +17,10 @@ const roomSchema = new mongoose.Schema({
     settings: {
         maxPlayers: { type: Number, default: 8 },
         rounds: { type: Number, default: 3 },
-        drawTime: { type: Number, default: 80 } // Draw time in seconds
+        drawTime: { type: Number, default: 80 }
     },
     gameStatus: {
         type: String,
-        // enum forces the value to be one of these specific strings
         enum: ['waiting', 'playing', 'finished'],
         default: 'waiting'
     }
