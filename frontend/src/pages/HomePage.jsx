@@ -6,7 +6,7 @@ export default function HomePage() {
     const [name, setName] = useState('');
     const [code, setCode] = useState('');
     const [error, setError] = useState('');
-    
+
     const setUsername = useGameStore((state) => state.setUsername);
     const setRoomCode = useGameStore((state) => state.setRoomCode);
     const navigate = useNavigate();
@@ -78,7 +78,7 @@ export default function HomePage() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-slate-100 p-4">
             <h1 className="text-5xl font-bold text-blue-600 mb-8">Skribbl Clone</h1>
-            
+
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-center">

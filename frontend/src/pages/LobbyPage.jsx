@@ -4,7 +4,7 @@ import useGameStore from '../store/useGameStore';
 import socket from '../socket/socket';
 
 export default function LobbyPage() {
-    const { username, roomCode, players, setPlayers } = useGameStore();
+    const { username, roomCode, players, setPlayers, host, setHost } = useGameStore();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,18 +29,22 @@ export default function LobbyPage() {
             navigate('/game');
         });
 
+        socket.on('host_updated', (data) => {
+            setHost(data.host);
+        });
+
         return () => {
             socket.off('player_joined');
             socket.off('player_left');
             socket.off('game_started');
-            socket.disconnect();
+            socket.off('host_updated');
         };
-    }, [username, roomCode, navigate, setPlayers]);
+    }, [username, roomCode, navigate, setPlayers, setHost]);
 
     const displayPlayers = [{ username, isMe: true }, ...players];
 
     const startGame = () => {
-        socket.emit('start_game', { roomCode });
+        socket.emit('start_game', { roomCode, username });
         navigate('/game');
     };
 
@@ -68,7 +72,12 @@ export default function LobbyPage() {
                         <ul className="space-y-3">
                             {displayPlayers.map((player, index) => (
                                 <li key={index} className="bg-white p-3 rounded shadow-sm border border-gray-100 flex justify-between items-center">
-                                    <span className="font-bold text-gray-800">{player.username}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold text-gray-800">{player.username}</span>
+                                        {player.username === host && (
+                                            <span className="text-xl" title="Room Host">👑</span>
+                                        )}
+                                    </div>
                                     {player.isMe && (
                                         <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded font-bold">YOU</span>
                                     )}
@@ -96,12 +105,18 @@ export default function LobbyPage() {
                     </div>
                 </div>
 
-                <button 
-                    onClick={startGame}
-                    className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-4 rounded-md transition-colors text-xl shadow-md"
-                >
-                    Start Game
-                </button>
+                {username === host ? (
+                    <button 
+                        onClick={startGame}
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-4 rounded-md transition-colors text-xl shadow-md"
+                    >
+                        Start Game
+                    </button>
+                ) : (
+                    <div className="w-full bg-gray-200 text-gray-600 font-bold py-4 px-4 rounded-md text-center text-xl shadow-sm border border-gray-300">
+                        Waiting for Host to Start...
+                    </div>
+                )}
             </div>
         </div>
     );
