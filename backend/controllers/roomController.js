@@ -19,7 +19,7 @@ const createRoom = async (req, res) => {
 
         let roomCode = generateRoomCode();
         let roomExists = await Room.findOne({ roomCode });
-        
+
         while (roomExists) {
             roomCode = generateRoomCode();
             roomExists = await Room.findOne({ roomCode });
