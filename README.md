@@ -1,95 +1,77 @@
-# Skribbl.io Clone
+# Skribbl.io Clone 🎨
 
-A full-stack multiplayer drawing and guessing game built with the MERN stack. Players can create private rooms, generate a unique room code, and have friends join in real-time.
+Hey! This is a multiplayer drawing and guessing game I built, inspired by skribbl.io. I wanted to learn how real-time WebSockets work with React, so I decided to build this from scratch.
 
-## Tech Stack
+You can create a room, share the code with your friends, and take turns drawing and guessing words.
 
-**Frontend:**
-- React (Vite)
-- Tailwind CSS
-- Zustand
-- Socket.IO Client
+**Live Demo:** [Add your Vercel link here]  
+**Live Backend API:** [Add your Render link here]
 
-**Backend:**
-- Node.js
-- Express.js
-- MongoDB & Mongoose
-- Socket.IO
+## 🛠️ Tech Stack
+- **Frontend:** React, Vite, Tailwind CSS, Zustand (for state management)
+- **Backend:** Node.js, Express
+- **Database:** MongoDB (via Mongoose)
+- **Real-time:** Socket.IO
 
-## Features
+## ✨ Features
+- **Real-time multiplayer:** Play with your friends in private rooms!
+- **Drawing Canvas:** You can draw, change colors, adjust brush size, undo, and clear the board.
+- **Game Flow:** Automatically rotates who is drawing and keeps track of rounds and timers.
+- **Scoring System:** You get points for guessing the word correctly, and the drawer gets points if people guess their drawing.
+- **Live Chat:** See everyone's messages and guesses as they type them in real-time.
 
-- Create private game rooms
-- Join rooms via unique 4-character codes
-- Real-time multiplayer synchronization
-- Live player join and leave updates
-- Socket.IO room management
+## 🚀 Local Setup
 
-## Folder Structure
+If you want to run this project on your own machine, follow these steps:
 
-```text
-skribbl-clone/
-├── frontend/    # React UI and state
-└── backend/     # Express API and Socket server
-```
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/yourusername/skribbl-clone.git
+   cd skribbl-clone
+   ```
 
-## Environment Variables
+2. **Setup the Backend**
+   Open a terminal and navigate to the backend folder:
+   ```bash
+   cd backend
+   npm install
+   ```
+   Create a `.env` file in the `backend` folder:
+   ```env
+   PORT=5000
+   MONGO_URI=your_mongodb_connection_string_here
+   CLIENT_URL=http://localhost:5173
+   ```
+   Start the backend server:
+   ```bash
+   npm run dev
+   ```
 
-To run this project, you need to create `.env` files in both directories.
+3. **Setup the Frontend**
+   Open a new terminal and navigate to the frontend folder:
+   ```bash
+   cd frontend
+   npm install
+   ```
+   Create a `.env` file in the `frontend` folder:
+   ```env
+   VITE_API_URL=http://localhost:5000
+   VITE_SOCKET_URL=http://localhost:5000
+   ```
+   Start the React app:
+   ```bash
+   npm run dev
+   ```
 
-**Backend (`backend/.env`)**
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection
-CLIENT_URL=http://localhost:5173
-```
+## 🧠 How the Tech Works (What I Learned)
 
-**Frontend (`frontend/.env`)**
-```env
-VITE_API_URL=http://localhost:5000/api
-VITE_SOCKET_URL=http://localhost:5000
-```
+### Socket.IO
+This was my first time heavily using WebSockets. Instead of making HTTP requests over and over (like a normal API), Socket.IO keeps a constant open two-way connection between the server and the browser. 
+When someone joins a room, the backend groups their socket connection into that specific "room". When a player guesses a word, the server emits a `correct_guess` event back down to everyone in that exact room so their chat updates instantly. It was tricky to handle what happens when someone disconnects mid-game, but I managed it by writing logic to automatically re-assign the host!
 
-## Installation
+### The HTML5 Canvas
+Building the drawing board was super fun. It uses the native `<canvas>` HTML element. Every time the user moves their mouse while clicking, I draw a line from their previous mouse position to their current mouse position using `canvas.getContext('2d')`.
+To make it multiplayer, I take those exact X and Y coordinates, bundle them with the brush color and size, and shoot them over Socket.IO to all the other players in the room. Their browser receives the coordinates and draws the exact same line at the exact same time.
 
-1. Clone the repository
-```bash
-git clone <repository-url>
-```
-
-2. **Backend Setup**
-```bash
-cd backend
-npm install
-npm run dev
-```
-
-3. **Frontend Setup**
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## API Routes
-
-- `POST /api/rooms/create` - Creates a new room and returns the generated room data
-- `POST /api/rooms/join` - Validates a room code and checks if a room is full
-
-## Socket Events
-
-- `create_room` - Emitted when a user initializes a new game lobby
-- `join_room` - Emitted to connect a user to an active room channel
-- `player_joined` - Broadcasted to the room when a new player connects
-- `player_left` - Broadcasted when a player disconnects or closes the tab
-
-## Future Improvements
-
-- Drawing canvas functionality
-- Real-time chat system
-- Player scoreboard
-- Round timer
-- Word selection system
-
-## Author
-
-Created by Vipin Kumar.
+---
+*Feel free to fork this and add your own features!*
