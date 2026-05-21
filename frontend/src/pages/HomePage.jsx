@@ -5,23 +5,74 @@ import useGameStore from '../store/useGameStore';
 export default function HomePage() {
     const [name, setName] = useState('');
     const [code, setCode] = useState('');
+    const [error, setError] = useState('');
+    
     const setUsername = useGameStore((state) => state.setUsername);
+    const setRoomCode = useGameStore((state) => state.setRoomCode);
     const navigate = useNavigate();
 
-    const handleCreateRoom = (e) => {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+    const handleCreateRoom = async (e) => {
         e.preventDefault();
-        if (!name.trim()) return;
-        
-        setUsername(name);
-        navigate('/lobby');
+        setError('');
+
+        if (!name.trim()) {
+            setError('Please enter your name');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/rooms/create`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: name })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setError(data.message || 'Failed to create room');
+                return;
+            }
+
+            setUsername(name);
+            setRoomCode(data.room.roomCode);
+            navigate('/lobby');
+        } catch (err) {
+            setError('Server error. Please try again later.');
+        }
     };
 
-    const handleJoinRoom = (e) => {
+    const handleJoinRoom = async (e) => {
         e.preventDefault();
-        if (!name.trim() || !code.trim()) return;
-        
-        setUsername(name);
-        navigate('/lobby');
+        setError('');
+
+        if (!name.trim() || !code.trim()) {
+            setError('Please enter both name and room code');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/rooms/join`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: name, roomCode: code })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setError(data.message || 'Failed to join room');
+                return;
+            }
+
+            setUsername(name);
+            setRoomCode(data.room.roomCode);
+            navigate('/lobby');
+        } catch (err) {
+            setError('Server error. Please try again later.');
+        }
     };
 
     return (
@@ -29,6 +80,12 @@ export default function HomePage() {
             <h1 className="text-5xl font-bold text-blue-600 mb-8">Skribbl Clone</h1>
             
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-center">
+                        {error}
+                    </div>
+                )}
+
                 <div className="mb-6">
                     <label className="block text-gray-700 font-semibold mb-2">Your Name</label>
                     <input 
