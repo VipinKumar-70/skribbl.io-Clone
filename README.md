@@ -54,7 +54,7 @@ A fun and interactive **multiplayer drawing & guessing game** inspired by [skrib
 | **Backend** | Node.js, Express.js |
 | **Database** | MongoDB, Mongoose |
 | **Real-time** | Socket.IO |
-| **Deployment** | Vercel (Frontend), Render (Backend) |
+| **Deployment** | Vercel (Frontend), Render (Backend), MongoDB Atlas (Databases) |
 
 ---
 
@@ -62,9 +62,8 @@ A fun and interactive **multiplayer drawing & guessing game** inspired by [skrib
 
 | Service | Link |
 |---------|------|
-| 🖥️ Frontend | [Skribbl.io Clone Frontend](#) |
-| ⚙️ Backend API | [Skribbl.io Clone Backend API](#) |
-
+| 🖥️ Frontend | [Skribbl.io Clone Frontend](https://skribbl-io-clone-gamma.vercel.app/) |
+| ⚙️ Backend API | [Skribbl.io Clone Backend API](https://skribbl-io-clone-vgl8.onrender.com) |
 ---
 
 ## 🚀 Installation & Setup
@@ -72,8 +71,8 @@ A fun and interactive **multiplayer drawing & guessing game** inspired by [skrib
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/skribbl-clone.git
-cd skribbl-clone
+git clone https://github.com/VipinKumar-70/skribbl.io-Clone.git
+cd skribbl.io-Clone
 ```
 
 ### 2. Backend Setup
@@ -140,8 +139,6 @@ skribbl-clone/
 │
 ├── frontend/        # React + Vite Frontend
 ├── backend/         # Node.js + Express Backend
-├── socket/          # Socket.IO game logic
-├── models/          # MongoDB models
 └── README.md
 ```
 
