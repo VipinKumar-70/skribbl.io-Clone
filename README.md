@@ -139,6 +139,7 @@ skribbl-clone/
 │
 ├── frontend/        # React + Vite Frontend
 ├── backend/         # Node.js + Express Backend
+├── LICENSE          # MIT License to the project
 └── README.md
 ```
 
